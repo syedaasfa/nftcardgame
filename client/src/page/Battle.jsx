@@ -44,7 +44,7 @@ useEffect(() =>{
               setPlayer2({ ...player02, att: 'X', def: 'X', health: p2H, mana: p2M });
 
         } catch(error) {
-            console.log(error);
+          setErrorMessage(error);
 
         }
 
@@ -53,6 +53,20 @@ useEffect(() =>{
      if (contract && gameData.activeBattle) getPlayerInfo();
 }, [contract, gameData, battleName]) 
 
+const makeAMove = async (choice) => {
+  playAudio(choice === 1 ? attackSound : defenseSound);
+  try {
+    await contract.attackOrDefendChoice(choice, battleName);
+
+    setShowAlert({
+      status: true,
+      type: 'info',
+      message: `Initiating ${choice === 1 ? 'attack' : 'defense'}`
+    });
+  } catch (error) {
+    setErrorMessage(error);
+  }
+};
 
   return (
     <div className={`${styles.flexBetween} ${styles.gameContainer}  ${battleGround}`}>
@@ -64,14 +78,14 @@ useEffect(() =>{
         <Card
           card={player2}
           title={player2?.playerName}
-          cardRef=''
+          cardRef={player2Ref}
           playerTwo
         />
 
         <div className="flex items-center flex-row">
           <ActionButton
             imgUrl={attack}
-            handleClick={() => {}}
+            handleClick={() => makeAMove(1)}
             restStyles="mr-2 hover:border-yellow-400"
           />
 
@@ -84,7 +98,7 @@ useEffect(() =>{
 
           <ActionButton
             imgUrl={defense}
-            handleClick={() => {}}
+            handleClick={() => makeAMove(2)}
             restStyles="ml-6 hover:border-red-600"
           />
         </div>
