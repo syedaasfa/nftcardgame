@@ -67,6 +67,13 @@ const makeAMove = async (choice) => {
     setErrorMessage(error);
   }
 };
+useEffect(() => {
+  const timer = setTimeout(() => {
+    if (!gameData?.activeBattle) navigate('/');
+  }, [2000]);
+
+  return () => clearTimeout(timer);
+}, []);
 
   return (
     <div className={`${styles.flexBetween} ${styles.gameContainer}  ${battleGround}`}>
