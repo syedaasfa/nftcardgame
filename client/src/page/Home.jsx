@@ -4,7 +4,7 @@ import { PageHOC, CustomInput, CustomButton } from "../components";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const { contract, walletAddress, setShowAlert } = useGlobalContext();
+  const { contract, walletAddress, setShowAlert, gameData, setErrorMessage } = useGlobalContext();
   const [playerName, setPlayerName] = useState("");
   const navigate = useNavigate();
   const handleClick = async () => {
@@ -14,7 +14,9 @@ const Home = () => {
       console.log(playerExists);
 
       if (!playerExists) {
-        const reg = await contract.registerPlayer(playerName, playerName);
+        const reg = await contract.registerPlayer(playerName, playerName, {
+          gasLimit: 200000
+        });
 
         setShowAlert({
           status: true,
@@ -23,11 +25,7 @@ const Home = () => {
         });
       }
     } catch (error) {
-        setShowAlert({
-        status: true,
-        type: "failure",
-        message: "something went wrong!",
-      });  
+       setErrorMessage(error)
     }
   };
 
@@ -41,6 +39,12 @@ const Home = () => {
 
     if (contract) createPlayerToken();
   }, [contract]);
+
+  useEffect(() => {
+    if (gameData.activeBattle) {
+      navigate(`/battle/${gameData.activeBattle.name}`);
+    }
+  }, [gameData]);
 
   return (
     <div className="flex flex-col">

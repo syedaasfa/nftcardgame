@@ -56,7 +56,9 @@ useEffect(() =>{
 const makeAMove = async (choice) => {
   playAudio(choice === 1 ? attackSound : defenseSound);
   try {
-    await contract.attackOrDefendChoice(choice, battleName);
+    await contract.attackOrDefendChoice(choice, battleName, {
+      gasLimit: 200000
+    });
 
     setShowAlert({
       status: true,
@@ -71,7 +73,7 @@ useEffect(() => {
   const timer = setTimeout(() => {
     if (!gameData?.activeBattle) navigate('/');
   }, [2000]);
-
+ 
   return () => clearTimeout(timer);
 }, []);
 

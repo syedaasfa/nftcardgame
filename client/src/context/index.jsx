@@ -33,8 +33,6 @@ export const GlobalContextProvider = ({ children }) => {
   const player1Ref = useRef();
   const player2Ref = useRef();
 
-
-
   
   const navigate = useNavigate();
   
@@ -71,6 +69,7 @@ export const GlobalContextProvider = ({ children }) => {
     console.log(accounts);
     if (accounts) setWalletAddress(accounts[0]);
   };
+
   useEffect(() => {
     updateCurrentWalletAddress();
 
@@ -174,7 +173,8 @@ export const GlobalContextProvider = ({ children }) => {
         errorMessage, 
         setErrorMessage,
         player1Ref,
-        player2Ref
+        player2Ref,
+        updateCurrentWalletAddress
       }}
     >
       {children}
